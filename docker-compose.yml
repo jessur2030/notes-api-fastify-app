@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  fastify_notes_app_db:
+    image: mysql:8.0
+    container_name: fastify_notes_app_db_container
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: fastify_notes_app_db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: userpassword
+    ports:
+      - "3315:3306"
+    volumes:
+      - ./fastify_notes_app_data:/var/lib/mysql
+
+volumes:
+  fastify_notes_app_data:
