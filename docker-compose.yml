@@ -10,7 +10,7 @@ services:
       MYSQL_USER: user
       MYSQL_PASSWORD: userpassword
     ports:
-      - "3315:3306"
+      - "3336:3306"
     volumes:
       - ./fastify_notes_app_data:/var/lib/mysql
 
