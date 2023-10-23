@@ -1,0 +1,116 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  userId        Int             @id @default(autoincrement())
+  username      String          @unique
+  passwordHash  String
+  salt          String
+  email         String?
+  createdAt     DateTime        @default(now())
+  lastLogin     DateTime?
+  Notes         Notes[]
+  Folders       Folders[]
+  Categories    Categories[]
+  Collaborators Collaborators[]
+}
+
+model Folders {
+  folderId        Int       @id @default(autoincrement())
+  parentFolderId  Int?      
+  userId          Int?
+  folderName      String
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  Notes           Notes[]
+  children        Folders[] @relation("FolderToFolder")
+  parent          Folders?  @relation("FolderToFolder", fields: [parentFolderId], references: [folderId])
+  User            Users?    @relation(fields: [userId], references: [userId], onDelete: Cascade)
+}
+
+model Notes {
+  noteId          Int                @id @default(autoincrement())
+  userId          Int?
+  folderId        Int?
+  title           String?
+  content         String?
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  isFavorite      Boolean            @default(false)
+  isArchived      Boolean            @default(false)
+  archivedAt      DateTime?          @default(now())
+  Attachments     Attachments[]
+  Reminders       Reminders[]
+  Collaborators   Collaborators[]
+  RevisionHistory Revision_History[]
+  User            Users?             @relation(fields: [userId], references: [userId], onDelete: Cascade )
+  Folder          Folders?           @relation(fields: [folderId], references: [folderId])
+  NoteCategories  Note_Categories[]
+}
+
+model Categories {
+  categoryId     Int               @id @default(autoincrement())
+  name           String
+  userId         Int?
+  User           Users?            @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  NoteCategories Note_Categories[]
+}
+
+model Note_Categories {
+  noteId     Int     
+  categoryId Int      
+  Note       Notes      @relation(fields: [noteId], references: [noteId])
+  Category   Categories @relation(fields: [categoryId], references: [categoryId])
+
+  @@id([noteId, categoryId])
+}
+
+model Attachments {
+  attachmentId   Int      @id @default(autoincrement())
+  noteId         Int
+  attachmentType String?
+  attachmentData Bytes?
+  createdAt      DateTime @default(now())
+  Note           Notes    @relation(fields: [noteId], references: [noteId], onDelete: Cascade) 
+}
+
+model Reminders {
+  reminderId   Int      @id @default(autoincrement())
+  noteId       Int
+  reminderTime DateTime
+  sent         Boolean  @default(false)
+  Note         Notes    @relation(fields: [noteId], references: [noteId], onDelete: Cascade)
+}
+
+model Collaborators {
+  collaboratorId  Int             @id @default(autoincrement())
+  noteId          Int
+  userId          Int
+  permissionLevel PermissionLevel @default(READ)
+  Note            Notes           @relation(fields: [noteId], references: [noteId], onDelete: Cascade)
+  User            Users           @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  @@unique([noteId, userId])
+}
+
+model Revision_History {
+  revisionId Int      @id @default(autoincrement())
+  noteId     Int
+  content    String?
+  editedAt   DateTime @default(now())
+  Note       Notes    @relation(fields: [noteId], references: [noteId], onDelete: Cascade)
+}
+
+enum PermissionLevel {
+  READ
+  WRITE
+  ADMIN
+}
