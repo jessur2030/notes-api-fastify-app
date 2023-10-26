@@ -13,10 +13,13 @@ datasource db {
 model Users {
   userId        Int             @id @default(autoincrement())
   username      String          @unique
-  passwordHash  String
+  password      String
   salt          String
+  firstName     String?
+  lastName      String?
   email         String?
   createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
   lastLogin     DateTime?
   Notes         Notes[]
   Folders       Folders[]
