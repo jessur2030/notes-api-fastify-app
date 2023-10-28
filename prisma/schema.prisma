@@ -14,7 +14,7 @@ model Users {
   salt          String
   firstName     String?
   lastName      String?
-  email         String?
+  email         String          @unique 
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
   lastLogin     DateTime?
