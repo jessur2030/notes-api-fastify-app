@@ -1,6 +1,6 @@
 import Fastify from 'fastify';
 import fastifyJwt from '@fastify/jwt';
-const fastifyEnv = require('@fastify/env')
+import fastifyEnv  from '@fastify/env'
 import userRautes from './modules/user/user.route';
 import {userSchemas} from "./modules/user/user.schema";
 const server = Fastify();
@@ -47,7 +47,7 @@ async function main(){
 
     server.register(userRautes, {prefix: '/api/users'});
     try {
-        await server.listen(PORT, '0.0.0.0')
+        await server.listen({port: 8000, host: '0.0.0.0',})
         console.log(`Server running at localhost:${PORT}`)
         
     } catch (error) {
