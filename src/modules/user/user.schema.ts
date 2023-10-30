@@ -28,6 +28,7 @@ const loginResponseSchema = z.object({
 })
 
 export type createUserSchemaType = z.infer<typeof createUserSchema>
+export type loginSchemaType = z.infer<typeof loginSchema>
 export const {schemas: userSchemas, $ref} = buildJsonSchemas({
     createUserSchema, createUserResponseSchema,
     loginSchema, loginResponseSchema
