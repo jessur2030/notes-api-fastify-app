@@ -1,9 +1,9 @@
 import { FastifyInstance } from "fastify";
-import registerUserHandler from "./user.controller";
+import {registerUserHandler, loginHandler} from "./user.controller";
 import { $ref } from "./user.schema";
 
  export default async function userRautes(server: FastifyInstance) {
-    return server.post('/',
+    server.post('/',
     {
      schema:{
       body: $ref("createUserSchema"),
@@ -12,4 +12,16 @@ import { $ref } from "./user.schema";
       }
      }
     }, registerUserHandler);
+
+    server.post('/login', {
+      schema:{
+         body: $ref("loginSchema"),
+         response:{
+            200: $ref("loginResponseSchema")
+         }
+      }
+    },
+      loginHandler
+    );
+    
  }
