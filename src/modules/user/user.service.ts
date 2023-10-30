@@ -8,4 +8,9 @@ export async function createrUser (input: createUserSchemaType){
     const user = await prisma.users.create({data: {...rest, password: hashedPassword, salt}})
     console.log(user)
     return user;
-} 
+}
+
+export async function findUserByEmail(email: string){
+    const user = await prisma.users.findUnique({where: {email}})
+    return user;
+}
