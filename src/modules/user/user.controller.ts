@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { createUserSchemaType,loginSchemaType } from "./user.schema";
-import { createrUser,findUserByEmail } from "./user.service";
+import { createrUser,findUserByEmail,findUsers } from "./user.service";
 import { verifyPassword } from "../../utils/hash";
 import { server } from "../../app";
 
@@ -43,4 +43,9 @@ export async function loginHandler(request: FastifyRequest<{
     // generate access token & response with access token
     const {password, salt, ...rest} = user;
     return { accessToken: server.jwt.sign(rest)}
+}
+
+export async function getUsersHandler(request: FastifyRequest, reply: FastifyReply){
+    const users = await findUsers();
+    return reply.code(200).send(users)
 }
