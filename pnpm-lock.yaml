@@ -11,6 +11,9 @@ dependencies:
   '@fastify/swagger':
     specifier: ^8.12.0
     version: 8.12.0
+  '@fastify/swagger-ui':
+    specifier: ^1.10.1
+    version: 1.10.1
   '@prisma/client':
     specifier: ^5.4.1
     version: 5.4.1
@@ -108,8 +111,8 @@ packages:
       p-limit: 3.1.0
     dev: false
 
-  /@fastify/swagger-ui@1.10.0:
-    resolution: {integrity: sha512-vps8KRDQ8JWQGG9Dh6fCOzAc81Y5a6RnCU/Sumyw3n7+HXJSYExnLLgv4aS9eRFSODtQ8kzZJ//IxAbf0nZ+sQ==}
+  /@fastify/swagger-ui@1.10.1:
+    resolution: {integrity: sha512-u3EJqNKvVr3X+6jY5i6pbs6/tXCrSlqc2Y+PVjnHBTOGh/d36uHMz+z4jPFy9gie2my6iHUrAdM8itlVmoUjog==}
     dependencies:
       '@fastify/static': 6.11.2
       fastify-plugin: 4.5.1
@@ -533,7 +536,7 @@ packages:
       fastify: ^4.15.0
     dependencies:
       '@fastify/swagger': 8.12.0
-      '@fastify/swagger-ui': 1.10.0
+      '@fastify/swagger-ui': 1.10.1
       '@types/js-yaml': 4.0.6
       change-case: 4.1.2
       fast-deep-equal: 3.1.3
