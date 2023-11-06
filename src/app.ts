@@ -6,6 +6,7 @@ import fastifySwaggerUi from '@fastify/swagger-ui'
 import dotenv from "dotenv";
 import userRautes from './modules/user/user.route';
 import {userSchemas} from "./modules/user/user.schema";
+import { version } from "../package.json";
 export const server = Fastify();
 dotenv.config();
 
@@ -40,8 +41,8 @@ async function main(){
           mode: 'dynamic',
           swagger: {
             info: {
-              title: 'Stripe Sync Engine',
-              version: '0.0.1',
+              title: 'Note App API',
+              version,
             },
           },
         })
