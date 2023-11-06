@@ -1,8 +1,11 @@
 import Fastify, { FastifyReply, FastifyRequest } from 'fastify';
 import fastifyJwt from '@fastify/jwt';
+import swagger from "@fastify/swagger";
 import dotenv from "dotenv";
 import userRautes from './modules/user/user.route';
 import {userSchemas} from "./modules/user/user.schema";
+import { withRefResolver } from "fastify-zod";
+import { version } from "../package.json";
 export const server = Fastify();
 dotenv.config();
 
@@ -30,11 +33,102 @@ return {status: 'ok'}
 
 async function main(){
 
-    for (const schema of userSchemas) {
-        server.addSchema(schema)
-    }
+    for (const schema of [...userSchemas]) {
+        server.addSchema(schema);
+      }
+    //   const swaggerOption = 
+   
+    //   })
+    //   {
+    //     openapi: {
+    //         info: {
+    //           title: 'Test swagger',
+    //           description: 'testing the fastify swagger api',
+    //           version: '0.1.0'
+    //         },
+    //         servers: [{
+    //           url: 'http://localhost:9000'
+    //         }],
+    //         components: {
+    //           securitySchemes: {
+    //             apiKey: {
+    //               type: 'apiKey',
+    //               name: 'apiKey',
+    //               in: 'header'
+    //             }
+    //           }
+    //         }
+    //       },
+    //       hideUntagged: true,
+    //       exposeRoute: true
+    //   }
+    //   // Register the Swagger plugin
+    //   server.register(require('@fastify/swagger'),    {
+    //     routePrefix: '/documentation',
+    //     swagger: {
+    //       info: {
+    //         title: 'Test API',
+    //         description: 'Testing the Fastify swagger API',
+    //         version: '0.1.0'
+    //       },
+    //       // other Swagger options...
+    //     },
+    //     // other plugin options...
+    //   });
 
-    server.register(userRautes, {prefix: '/api/users'});
+    // const wholeSchema = {
+    //     swagger: {
+    //         info: {
+    //             title: 'API',
+    //             description: 'API documentation',
+    //             version: '0.1.0'
+    //         },
+    //         host: 'localhost:9000',
+    //         schemes: ['http'],
+    //         consumes: ['application/json'],
+    //         produces: ['application/json'],
+    //         securityDefinitions: {
+    //             apiKey: {
+    //                 type: 'apiKey',
+    //                 name: 'apiKey',
+    //                 in: 'header'
+    //             }
+    //         },
+    //         // definitions: schema.definitions
+    //     }
+    // }
+    
+    //  server.register(require('@fastify/swagger'), wholeSchema)
+    
+    
+    server.register(require('@fastify/swagger'), {
+        routePrefix: '/documentation',
+        swagger: {
+          info: {
+            title: 'API',
+            description: 'API documentation',
+            version: '0.1.0'
+          },
+          host: 'localhost:9000',
+          schemes: ['http'],
+          consumes: ['application/json'],
+          produces: ['application/json'],
+          securityDefinitions: {
+            apiKey: {
+              type: 'apiKey',
+              name: 'apiKey',
+              in: 'header'
+            }
+          },
+        },
+        exposeRoute: true
+      });
+      
+      // Make sure all plugins and routes are ready
+      server.register(userRautes, { prefix: '/api/users' });
+    //   await server.ready();
+    
+
     try {
         await server.listen({port: PORT, host: HOST,})
         console.log(`Server running at localhost:${PORT}`)
