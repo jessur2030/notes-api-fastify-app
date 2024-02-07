@@ -1,8 +1,12 @@
 import Fastify, { FastifyReply, FastifyRequest } from 'fastify';
 import fastifyJwt from '@fastify/jwt';
+// import swagger from "@fastify/swagger";
+import fastifySwagger from '@fastify/swagger'
+import fastifySwaggerUi from '@fastify/swagger-ui'
 import dotenv from "dotenv";
 import userRautes from './modules/user/user.route';
 import {userSchemas} from "./modules/user/user.schema";
+import { version } from "../package.json";
 export const server = Fastify();
 dotenv.config();
 
@@ -29,12 +33,25 @@ return {status: 'ok'}
 });
 
 async function main(){
-
-    for (const schema of userSchemas) {
-        server.addSchema(schema)
-    }
-
-    server.register(userRautes, {prefix: '/api/users'});
+    for (const schema of [...userSchemas]) {
+        server.addSchema(schema);
+      }
+ 
+        await server.register(fastifySwagger, {
+          mode: 'dynamic',
+          swagger: {
+            info: {
+              title: 'Note App API',
+              version,
+            },
+          },
+        })
+    
+        await server.register(fastifySwaggerUi, {
+          routePrefix: '/docs',
+        })
+    
+      server.register(userRautes, { prefix: '/api/users' });
     try {
         await server.listen({port: PORT, host: HOST,})
         console.log(`Server running at localhost:${PORT}`)
